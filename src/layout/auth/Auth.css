@@ -1,0 +1,10 @@
+.auth_container {
+    background-color: darkgray;
+    width:100%;
+}
+
+.title {
+    font-size: 32px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    letter-spacing: 4px;
+}
