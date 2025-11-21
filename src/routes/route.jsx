@@ -4,6 +4,7 @@ import Auth from "../layout/auth/Auth";
 import Qr from "../layout/pages/qr/Qr";
 import User from "../layout/pages/user/User";
 import Base from "../templates/Base";
+import Test from "../Test";
 
 
 const router = createBrowserRouter([
@@ -56,6 +57,15 @@ const router = createBrowserRouter([
                     return { Component }
                 }
             },
+            {
+                path: 'test',
+                lazy: async () => {
+                    const [Component] = await Promise.all([
+                        Test,
+                    ]);
+                    return { Component };
+                }
+            }
         ],
     },
 ]);

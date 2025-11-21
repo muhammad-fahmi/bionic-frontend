@@ -1,16 +1,22 @@
- function Verifikator(props) {
-    // const [data, setData] = useState('');
-    // const taskList = [];
-    // useEffect(() => {
-    //     axios.get('/api/api/submitted_task')
-    //         .then((response) => {
-    //             setData(response.data);
-    //         });
-    // }, []);
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Button, ButtonGroup } from "react-bootstrap";
 
-    // Object.keys(data).map((key) => {
-    //     taskList.push(data[key]);
-    // });
+function Verifikator(props) {
+    const [data, setData] = useState('');
+    const taskList = [];
+    useEffect(() => {
+        axios.get('/api/api/submitted_task')
+            .then((response) => response.data)
+            .then((response) => {
+                setData(response);
+            });
+
+    });
+
+    Object.keys(data).map((key) => {
+        taskList.push(data[key]);
+    });
     return (
         <>
             <div className="card">
@@ -39,38 +45,37 @@
             <div className={`card mt-2 p-3`}>
                 <h5 className="text-center">Task List</h5>
                 <hr style={{ border: '5px solid black' }} />
-                <div style={{ overflowX:'scroll' }}>
+                <div style={{ overflowX: 'scroll' }}>
                     <table className="table text-center" style={{ verticalAlign: 'middle' }}>
                         <thead>
                             <tr>
                                 <th>Tanggal</th>
                                 <th>Nama</th>
-                                <th>Ruangan</th>
+                                <th>Lokasi</th>
                                 <th>Shift</th>
-                                <th>Kondisi</th>
-                                <th>Status Laporan</th>
+                                <th>Status Task</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {/* {taskList.map(item => {
-                            return (
-                                <tr>
-                                    <td>{item.tanggal}</td>
-                                    <td>{item.nama_pegawai}</td>
-                                    <td>{item.ruangan}</td>
-                                    <td>{item.shift}</td>
-                                    <td>{item.status}</td>
-                                    <td>Menunggu</td>
-                                    <td>
-                                        <ButtonGroup>
-                                            <Button className="btn btn-success">Terima</Button>
-                                            <Button className="btn btn-danger">Tolak</Button>
-                                        </ButtonGroup>
-                                    </td>
-                                </tr>
-                            );
-                        })} */}
+                            {taskList.map(item => {
+                                return (
+                                    <tr>
+                                        <td>{item.tanggal}</td>
+                                        <td>{item.nama_pegawai}</td>
+                                        <td>{item.ruangan}</td>
+                                        <td>{item.shift}</td>
+                                        <td>{item.status}</td>
+                                        <td>Menunggu</td>
+                                        <td>
+                                            <ButtonGroup>
+                                                <Button className="btn btn-success">Terima</Button>
+                                                <Button className="btn btn-danger">Tolak</Button>
+                                            </ButtonGroup>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>

@@ -2,8 +2,23 @@ import { Scanner } from "@yudiel/react-qr-scanner";
 import axios from "axios";
 import { useLayoutEffect, useState } from "react";
 import { Card, CardBody, CardHeader } from "react-bootstrap";
+import { useForm } from "react-hook-form";
 import { OrbitProgress } from "react-loading-indicators";
+import { Form, useNavigate } from "react-router";
 import CleanStatus from "../../../components/CleanStatus";
+
+function formatString(inputString) {
+    // Replace underscores with spaces
+    let spacedString = inputString.replaceAll('_', ' ');
+
+    // Capitalize the first letter
+    if (spacedString.length === 0) {
+        return ""; // Handle empty string case
+    }
+    let capitalizedString = spacedString.charAt(0).toUpperCase() + spacedString.substring(1);
+
+    return capitalizedString;
+}
 
 export default function Pegawai(props) {
     const [isAvailable, setIsAvailable] = useState(0);
@@ -11,6 +26,8 @@ export default function Pegawai(props) {
     const [isPaused, setIsPaused] = useState(false);
     const [data, setData] = useState([]);
     const [title, setTitle] = useState('');
+    const { register, handleSubmit } = useForm();
+    const navigate = useNavigate();
 
     const handleScan = async (detectedBarcode) => {
         setIsAvailable(1);
@@ -20,6 +37,12 @@ export default function Pegawai(props) {
         let response = await axios.get('/api/api/task/' + barcodeData.shift + '/' + barcodeData.id);
         response = response.data;
         localStorage.setItem('scanData', JSON.stringify(response));
+        if (response.length == 0) {
+            alert("Data Yang di scan tidak ada!");
+            setIsAvailable(0);
+            setIsPaused(false);
+            setIsLoading(false);
+        }
         if (response[0].shift != props.id_shift) {
             alert("Tempat ini bukan bagian shift anda!");
             setIsAvailable(0);
@@ -32,10 +55,13 @@ export default function Pegawai(props) {
         }
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        console.log(event);
-    }
+
+    const onSubmit = (data) => {
+        const scanDataLocal = JSON.parse(localStorage.getItem('scanData'))[0];
+        axios.post('/api/api/task/submit', {
+            data: { ...props, ...{ lokasi: scanDataLocal['lokasi'], lokasi_id: scanDataLocal['lokasi_id'] }, data }
+        });
+    };
 
     useLayoutEffect(() => {
         if (localStorage.getItem('scanData') != null) {
@@ -47,8 +73,6 @@ export default function Pegawai(props) {
             setIsPaused(true);
         }
     }, []);
-
-
 
     return (
         <>
@@ -77,6 +101,9 @@ export default function Pegawai(props) {
                                 </tr>
                             </tbody>
                         </table>
+                        <div>
+                            <button className="btn btn-sm btn-danger my-2" onClick={() => {navigate('/')}}>LogOut</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -127,34 +154,38 @@ export default function Pegawai(props) {
                     <span className="text-uppercase border-bottom border-3 border-dark rounded-pill pb-1 p-2">{title}</span>
                 </h4>
                 <div className="p-3">
-                    {data.map(item => {
-                        return (
-                            <Card className="my-2" key={item.id}>
-                                <CardHeader children={<h6>{item.item}</h6>} />
-                                <CardBody >
-                                    <CleanStatus id={item.id} actions={item.actions} />
-                                </CardBody>
-                            </Card>
-                        );
-                    })}
+                    <Form onSubmit={handleSubmit(onSubmit)}>
+                        {data.map(item => {
+                            return (
+                                <Card className="my-2" key={item.id}>
+                                    <CardHeader children={<h6>{formatString(item.item)}</h6>} />
+                                    <CardBody >
+                                        <CleanStatus id={item.id} nama={item.item} aksi={item.aksi} register={register} />
+                                    </CardBody>
+                                </Card>
+                            );
+                        })}
+
+                        <div className={`row p-3 ${isLoading ? 'd-none' : ''}`}>
+                            <div className={`col-6`}>
+                                <button type="submit" className="btn btn-primary" onClick={() => {
+                                    setIsAvailable(0);
+                                    setIsPaused(false);
+                                    setIsLoading(false);
+                                }}>Submit</button>
+                            </div>
+                            <div className={`col-6 text-end`}>
+                                <button type="button" className="btn btn-danger" onClick={() => {
+                                    setIsAvailable(0);
+                                    setIsPaused(false);
+                                    setIsLoading(false)
+                                    localStorage.removeItem('scanData');
+                                }}>Cancel</button>
+                            </div>
+                        </div>
+                    </Form>
                 </div>
 
-                <div className={`row p-3 ${isLoading ? 'd-none' : ''}`}>
-                    <div className={`col-6`}>
-                        <button className="btn btn-primary" onClick={() => {
-                            setIsLoading(true);
-                            handleSubmit;
-                        }}>Submit</button>
-                    </div>
-                    <div className={`col-6 text-end`}>
-                        <button type="button" className="btn btn-danger" onClick={() => {
-                            setIsAvailable(0);
-                            setIsPaused(false);
-                            setIsLoading(false)
-                            localStorage.removeItem('scanData');
-                        }}>Cancel</button>
-                    </div>
-                </div>
             </div>
         </>
     );
