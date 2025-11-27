@@ -58,7 +58,7 @@ export default function Pegawai(props) {
 
     const onSubmit = (data) => {
         const scanDataLocal = JSON.parse(localStorage.getItem('scanData'))[0];
-        axios.post('/api/api/task/submit', {
+        axios.post('/api/task/submit', {
             data: { ...props, ...{ lokasi: scanDataLocal['lokasi'], lokasi_id: scanDataLocal['lokasi_id'] }, data }
         });
     };

@@ -25,7 +25,7 @@ const router = createBrowserRouter([
                     const username = formdata.get('username');
                     const password = formdata.get('password');
                     let isOK = false;
-                    await axios.post('/api/auth', {
+                    await axios.post('/auth', {
                         username,
                         password
                     })
