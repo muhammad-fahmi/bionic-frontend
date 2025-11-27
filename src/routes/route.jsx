@@ -68,12 +68,7 @@ const router = createBrowserRouter([
             },
             {
                 path: 'qr',
-                lazy: async () => {
-                    const [Component] = await Promise.all([
-                        Qr
-                    ]);
-                    return { Component }
-                }
+                Component: Qr
             },
             {
                 path: 'test',
