@@ -1,9 +1,10 @@
 import axios from "axios";
 import { createBrowserRouter, redirect } from "react-router";
 import Auth from "../layout/auth/Auth";
-import Qr from "../layout/pages/qr/Qr";
+import Qr from "../layout/pages/qrcode/Qr";
 import User from "../layout/pages/user/User";
 import Base from "../templates/Base";
+import Test from "../Test";
 
 function simulateSuccessfulRequest(data, delay = 1000) {
     return new Promise((resolve) => {
@@ -70,6 +71,15 @@ const router = createBrowserRouter([
                 lazy: async () => {
                     const [Component] = await Promise.all([
                         Qr
+                    ]);
+                    return { Component }
+                }
+            },
+            {
+                path: 'test',
+                lazy: async () => {
+                    const [Component] = await Promise.all([
+                        Test
                     ]);
                     return { Component }
                 }
