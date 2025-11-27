@@ -9,7 +9,7 @@ function Verifikator({ nama, jabatan }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('/api/api/submitted_task')
+        axios.get('/api/submitted_task')
             .then((response) => response.data)
             .then((response) => {
                 setData(response);

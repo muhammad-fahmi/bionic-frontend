@@ -34,7 +34,7 @@ export default function Pegawai(props) {
         setIsPaused(true);
         setIsLoading(true);
         let barcodeData = JSON.parse(detectedBarcode[0].rawValue);
-        let response = await axios.get('/api/api/task/' + barcodeData.shift + '/' + barcodeData.id);
+        let response = await axios.get('/api/task/' + barcodeData.shift + '/' + barcodeData.id);
         response = response.data;
         localStorage.setItem('scanData', JSON.stringify(response));
         if (response.length == 0) {
