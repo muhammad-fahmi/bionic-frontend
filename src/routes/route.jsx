@@ -4,8 +4,14 @@ import Auth from "../layout/auth/Auth";
 import Qr from "../layout/pages/qr/Qr";
 import User from "../layout/pages/user/User";
 import Base from "../templates/Base";
-import Test from "../Test";
 
+function simulateSuccessfulRequest(data, delay = 1000) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(data); // Resolve the promise with the simulated data
+        }, delay);
+    });
+}
 
 const router = createBrowserRouter([
     {
@@ -13,17 +19,17 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                lazy: async () => {
-                    const [Component, action] = await Promise.all([
-                        Auth,
-                        async ({ request }) => {
-                            const formdata = await request.formData();
-                            const username = formdata.get('username');
-                            const password = formdata.get('password');
-                            let response = await axios.post('/api/auth', {
-                                username,
-                                password
-                            });
+                Component: Auth,
+                action: async ({ request }) => {
+                    const formdata = await request.formData();
+                    const username = formdata.get('username');
+                    const password = formdata.get('password');
+                    let isOK = false;
+                    await axios.post('/api/auth', {
+                        username,
+                        password
+                    })
+                        .then((response) => {
                             const now = new Date();
                             const expiryTime = now.getTime() + (24 * 60 * 60 * 1000);
                             let send_data = {
@@ -33,19 +39,30 @@ const router = createBrowserRouter([
                             };
 
                             localStorage.setItem('loginData', JSON.stringify(send_data));
-                            return redirect('user');
-                        }
-                    ]);
-                    return { Component, action }
-                },
+                            isOK = true;
+                        })
+                        .catch((error) => {
+                            console.log(error.status);
+                        });
+                    if (isOK)
+                        return redirect('user');
+                }
             },
             {
                 path: 'user',
                 lazy: async () => {
-                    const [Component] = await Promise.all([
-                        User
+                    const [Component, action] = await Promise.all([
+                        User,
+                        async ({ request }) => {
+                            const formData = await request.formData();
+                            const terima = formData.get("terima");
+                            const tolak = formData.get("tolak");
+
+                            await simulateSuccessfulRequest('success', 5000)
+                            return { terima, tolak };
+                        }
                     ]);
-                    return { Component }
+                    return { Component, action }
                 },
             },
             {
@@ -57,15 +74,6 @@ const router = createBrowserRouter([
                     return { Component }
                 }
             },
-            {
-                path: 'test',
-                lazy: async () => {
-                    const [Component] = await Promise.all([
-                        Test,
-                    ]);
-                    return { Component };
-                }
-            }
         ],
     },
 ]);

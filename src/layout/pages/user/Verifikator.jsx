@@ -1,22 +1,22 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, ButtonGroup } from "react-bootstrap";
+import { Badge } from "react-bootstrap";
+import { useNavigate } from "react-router";
+import TaskItem from "../../../components/TaskItem";
 
-function Verifikator(props) {
-    const [data, setData] = useState('');
-    const taskList = [];
+function Verifikator({ nama, jabatan }) {
+    const [data, setData] = useState([]);
+    const navigate = useNavigate();
+
     useEffect(() => {
         axios.get('/api/api/submitted_task')
             .then((response) => response.data)
             .then((response) => {
                 setData(response);
             });
+    }, []);
 
-    });
 
-    Object.keys(data).map((key) => {
-        taskList.push(data[key]);
-    });
     return (
         <>
             <div className="card">
@@ -30,15 +30,23 @@ function Verifikator(props) {
                                 <tr>
                                     <td>Nama</td>
                                     <td>:</td>
-                                    <td>{props.nama}</td>
+                                    <td>{nama}</td>
                                 </tr>
                                 <tr>
                                     <td>Jabatan</td>
                                     <td>:</td>
-                                    <td>{props.jabatan}</td>
+                                    <td>{jabatan.charAt(0).toUpperCase() + jabatan.slice(1)}</td>
                                 </tr>
                             </tbody>
                         </table>
+                        <div>
+                            <button className="btn btn-sm btn-danger my-2" onClick={() => {
+                                localStorage.removeItem('loginData');
+                                localStorage.removeItem('scanData');
+                                navigate('/');
+                            }}><i className="fa-solid fa-power-off"></i>
+                                Log Out</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -58,20 +66,22 @@ function Verifikator(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {taskList.map(item => {
+                            {data.map(item => {
+                                const jsDateObject = new Date(item.tanggal);
+                                const timestamp = jsDateObject.getTime();
                                 return (
-                                    <tr>
+                                    <tr key={timestamp}>
                                         <td>{item.tanggal}</td>
-                                        <td>{item.nama_pegawai}</td>
-                                        <td>{item.ruangan}</td>
+                                        <td>{item.petugas}</td>
+                                        <td>{item.lokasi.toUpperCase()}</td>
                                         <td>{item.shift}</td>
-                                        <td>{item.status}</td>
-                                        <td>Menunggu</td>
                                         <td>
-                                            <ButtonGroup>
-                                                <Button className="btn btn-success">Terima</Button>
-                                                <Button className="btn btn-danger">Tolak</Button>
-                                            </ButtonGroup>
+                                            {item.status == 'pending' && <Badge pill bg="warning">{item.status}</Badge>}
+                                            {item.status == 'approved' && <Badge pill bg="success">{item.status}</Badge>}
+                                            {item.status == 'rejected' && <Badge pill bg="danger">{item.status}</Badge>}
+                                        </td>
+                                        <td>
+                                            <TaskItem key={timestamp} />
                                         </td>
                                     </tr>
                                 );

@@ -2,8 +2,6 @@ import { Form } from "react-router";
 import './Auth.css';
 
 export default function Auth() {
-    localStorage.removeItem('loginData');
-    localStorage.removeItem('scanData');
     return (
         <div className="container-fluid vh-100 p-3 d-flex justify-content-center align-items-center auth_container">
             <div className="card p-2 w-100">

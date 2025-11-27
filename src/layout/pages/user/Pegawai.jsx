@@ -102,7 +102,12 @@ export default function Pegawai(props) {
                             </tbody>
                         </table>
                         <div>
-                            <button className="btn btn-sm btn-danger my-2" onClick={() => {navigate('/')}}>LogOut</button>
+                            <button className="btn btn-sm btn-danger my-2" onClick={() => {
+                                localStorage.removeItem('loginData');
+                                localStorage.removeItem('scanData');
+                                navigate('/');
+                            }}><i className="fa-solid fa-power-off"></i>
+                                Log Out</button>
                         </div>
                     </div>
                 </div>
