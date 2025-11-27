@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 function Qr() {
     const [data, setData] = useState([]);
     useEffect(() => {
-        axios.get('/api/api/qr')
+        axios.get('/api/qr')
             .then((response) => response.data)
             .then((response) => {
                 setData(response);
