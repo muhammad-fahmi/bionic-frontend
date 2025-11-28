@@ -1,7 +1,7 @@
 import { Scanner } from "@yudiel/react-qr-scanner";
 import axios from "axios";
 import { useLayoutEffect, useState } from "react";
-import { Card, CardBody, CardHeader } from "react-bootstrap";
+import { Card, CardBody, CardHeader, Toast, ToastContainer } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { OrbitProgress } from "react-loading-indicators";
 import { Form, useNavigate } from "react-router";
@@ -26,6 +26,7 @@ export default function Pegawai(props) {
     const [isPaused, setIsPaused] = useState(false);
     const [data, setData] = useState([]);
     const [title, setTitle] = useState('');
+    const [showA, setShowA] = useState(false);
     const { register, handleSubmit } = useForm();
     const navigate = useNavigate();
 
@@ -56,11 +57,12 @@ export default function Pegawai(props) {
     };
 
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         const scanDataLocal = JSON.parse(localStorage.getItem('scanData'))[0];
-        axios.post('/api/task/submit', {
+        await axios.post('/api/task/submit', {
             data: { ...props, ...{ lokasi: scanDataLocal['lokasi'], lokasi_id: scanDataLocal['lokasi_id'] }, data }
         });
+        localStorage.removeItem('scanData');
     };
 
     useLayoutEffect(() => {
@@ -76,6 +78,12 @@ export default function Pegawai(props) {
 
     return (
         <>
+            <ToastContainer position="top-end" style={{ zIndex: 1 }} className="p-3">
+                <Toast show={showA} bg="primary" delay={3000} onClose={() => setShowA(!showA)} autohide>
+                    <Toast.Body>Tugas sudah di submit</Toast.Body>
+                </Toast>
+            </ToastContainer>
+
             <div className="card">
                 <div className="row p-3 align-items-center justify-content-center">
                     <div className="col-3">
@@ -165,7 +173,7 @@ export default function Pegawai(props) {
                                 <Card className="my-2" key={item.id}>
                                     <CardHeader children={<h6>{formatString(item.item)}</h6>} />
                                     <CardBody >
-                                        <CleanStatus id={item.id} nama={item.item} aksi={item.aksi} register={register} />
+                                        <CleanStatus id_item={item.id} nama={item.item} aksi={item.aksi} register={register} />
                                     </CardBody>
                                 </Card>
                             );
@@ -177,6 +185,7 @@ export default function Pegawai(props) {
                                     setIsAvailable(0);
                                     setIsPaused(false);
                                     setIsLoading(false);
+                                    setShowA(true);
                                 }}>Submit</button>
                             </div>
                             <div className={`col-6 text-end`}>
