@@ -14,6 +14,7 @@ function simulateSuccessfulRequest(data, delay = 1000) {
     });
 }
 
+
 const router = createBrowserRouter([
     {
         Component: Base,
@@ -81,6 +82,6 @@ const router = createBrowserRouter([
             },
         ],
     },
-]);
+], { basename: '/bionic-frontend/' });
 
 export default router

@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Badge } from "react-bootstrap";
+import { Badge, Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
-import TaskItem from "../../../components/TaskItem";
 
 function Verifikator({ nama, jabatan }) {
     const [data, setData] = useState([]);
+    const [button, setButton] = useState(false);
     const navigate = useNavigate();
+    // const [modalShow, setModalShow] = useState(false);
 
     useEffect(() => {
         axios.get('/api/submitted_task')
@@ -14,11 +15,62 @@ function Verifikator({ nama, jabatan }) {
             .then((response) => {
                 setData(response);
             });
-    }, []);
+    }, [])
+
+    useEffect(() => {
+        axios.get('/api/submitted_task')
+            .then((response) => response.data)
+            .then((response) => {
+                setData(response);
+            });
+    }, [button])
+
+
+    const handleSubmit = (submitValue, id, tanggal, petugas) => {
+        axios.put('/api/submitted_task', {
+            data: submitValue,
+            id: id,
+            tanggal: tanggal,
+            petugas: petugas
+        })
+            .then(() => {
+                setButton(!button);
+            })
+    }
+
+
+
+    // const checkDetail = () => {
+    //     setModalShow(true);
+    // }
 
 
     return (
-        <>
+        <div>
+            {/* <Modal
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Modal heading
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <h4>Centered Modal</h4>
+                    <p>
+                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
+                        dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
+                        consectetur ac, vestibulum at eros.
+                    </p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => { setModalShow(false) }}>Close</Button>
+                </Modal.Footer>
+            </Modal> */}
             <div className="card">
                 <div className="row p-3 align-items-center justify-content-center">
                     <div className="col-3">
@@ -81,7 +133,21 @@ function Verifikator({ nama, jabatan }) {
                                             {item.status == 'rejected' && <Badge pill bg="danger">{item.status}</Badge>}
                                         </td>
                                         <td>
-                                            <TaskItem key={timestamp} />
+                                            {(item.status == 'approved' || item.status == 'rejected') ? 'Detail (on progress)' : <div>
+                                                <Button variant="success" onClick={() => {
+                                                    handleSubmit('approved', item.id, item.tanggal, item.petugas);
+                                                }} className="mx-2"><i className="fa-solid fa-check"></i>Terima</Button>
+                                                <Button variant="danger" onClick={() => {
+                                                    handleSubmit('rejected', item.id, item.tanggal, item.petugas);
+                                                }} className="mx-2"><i className="fa-solid fa-xmark"></i>Tolak</Button>
+                                            </div>}
+
+                                            {/* <Button onClick={() => {
+                                                checkDetail
+                                            }}>
+                                                <i class="fa-solid fa-magnifying-glass"></i>
+                                                Detail
+                                            </Button> */}
                                         </td>
                                     </tr>
                                 );
@@ -91,7 +157,7 @@ function Verifikator({ nama, jabatan }) {
                 </div>
 
             </div>
-        </>
+        </div>
     )
 }
 
