@@ -1,6 +1,7 @@
+import { lazy, Suspense } from "react";
 import { useLoaderData, useNavigate } from "react-router";
-import Pegawai from './Pegawai';
-import Verif from './Verifikator';
+const Pegawai = lazy(() => import('./Pegawai'));
+const Verif = lazy(() => import('./Verifikator'));
 
 function User() {
     const navigate = useNavigate();
@@ -12,9 +13,13 @@ function User() {
 
 
     if (jabatan == 'petugas') {
-        return <Pegawai nama={nama} jabatan={jabatan} id_shift={shift} />
+        return (<Suspense fallback={<div>Loading...</div>}>
+            <Pegawai nama={nama} jabatan={jabatan} id_shift={shift} />
+        </Suspense>)
     } else if (jabatan == 'verifikator') {
-        return <Verif nama={nama} jabatan={jabatan} loaderData={loader}/>
+        return (<Suspense fallback={<div>Loading...</div>}>
+            <Verif nama={nama} jabatan={jabatan} loaderData={loader} />
+        </Suspense>)
     } else {
         return navigate(-1);
     }

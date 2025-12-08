@@ -1,25 +1,62 @@
 import { Form } from "react-router";
-import './Auth.css';
+import styles from './Auth.module.css';
 
 export default function Auth() {
     return (
-        <div className="container-fluid vh-100 p-3 d-flex justify-content-center align-items-center auth_container">
-            <div className="card p-2 w-100">
-                <h3 className="title text-center">LOGIN</h3>
+        <div className={`container-fluid vh-100 p-3 d-flex flex-column justify-content-center align-items-center ${styles.auth_container}`}>
+            <div className={styles.login_container}>
+                <h1>LOGIN</h1>
+
                 <Form method="post">
-                    <div className="m-2">
-                        <label htmlFor="username" className="form-label">Username</label>
-                        <input type="text" id="username" name="username" className="form-control" />
+                    <div className={styles.input_group}>
+                        <label htmlFor="username" className="text-uppercase">username</label>
+                        <input type="text" id="username" placeholder="Username" name="username" />
                     </div>
-                    <div className="m-2">
-                        <label htmlFor="password" className="form-label">Password</label>
-                        <input type="password" id="password" name="password" className="form-control" />
+
+                    <div className={styles.input_group}>
+                        <label htmlFor="password">PASSWORD</label>
+                        <input type="password" id="password" placeholder="••••••••" name="password" />
                     </div>
+
+                    <button type="submit">SIGN IN</button>
+                </Form>
+
+                <div className={styles.divider}>OR</div>
+
+                <div className={styles.social_login}>
+                    <div className={styles.social_btn}>G</div>
+                    <div className={styles.social_btn}>F</div>
+                    <div className={styles.social_btn}>X</div>
+                </div>
+
+                <div className={styles.footer}>
+                    Don't have an account? <a href="#">Sign up</a>
+                </div>
+            </div>
+            {/* <div className="card p-3 w-50 h-auto login_form">
+                <h3 className="title text-center text-uppercase">
+                    Login
+                </h3>
+                <Form method="post">
+                    <FloatingLabel
+                        controlId="username"
+                        label="Username"
+                        className="mb-3"
+                    >
+                        <FormControl type="text" placeholder="Username" name="username" />
+                    </FloatingLabel>
+                    <FloatingLabel
+                        controlId="password"
+                        label="Password"
+                        className="mb-3"
+                    >
+                        <FormControl type="password" placeholder="Password" name="password" />
+                    </FloatingLabel>
                     <div className="m-2 text-end">
-                        <button type="submit" className="btn btn-primary">Login</button>
+                        <Button variant="primary" type="submit">Login</Button>
                     </div>
                 </Form>
-            </div>
+            </div> */}
         </div>
     );
 }

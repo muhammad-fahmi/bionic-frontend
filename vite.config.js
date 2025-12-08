@@ -4,8 +4,11 @@ import { defineConfig } from 'vite';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  base: '/bionic-frontend',
+  plugins: [react({
+    babel: {
+      plugins: ['babel-plugin-react-compiler'],
+    },
+  })],
   css: {
     preprocessorOptions: {
       scss: {

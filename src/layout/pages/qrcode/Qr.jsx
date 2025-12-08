@@ -13,15 +13,16 @@ function Qr() {
     }, []);
 
     return (
-        <div className='row d-flex justify-content-center align-items-center container-fluid' style={{ minHeight: '100vh' }}>
+        <div className='row'>
             {data.map(item => {
                 let data = JSON.stringify(item);
                 return (
-                    <div className='d-flex flex-column justify-content-center align-items-center m-3' key={item.id}>
-                        <QRCodeSVG value={data} size={512} level="H" className='col-12' />
-                        <h2 className='text-center fw-bold'>{item.lokasi}</h2>
-                        <p className='text-center fw-bold' style={{ fontSize: '24px' }}>Shift: {item.shift}</p>
-                    </div>
+                        <div className='col-4 d-flex flex-column justify-content-center align-items-center p-2' key={item.id}>
+                            <QRCodeSVG value={data} size={512} level="H" className='col-12 mb-0' />
+                            <h2 className='text-center fw-bold'>{item.lokasi}</h2>
+                            <p className='text-center fw-bold' style={{ fontSize: '24px' }}>Shift: {item.shift}</p>
+                            <p className='text-center'>Link: "https://bionic-natura.cloud/bionic-frontend/"</p>
+                        </div>
                 )
             })}
         </div>
