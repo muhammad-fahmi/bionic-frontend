@@ -3,17 +3,8 @@ import { FormCheck } from "react-bootstrap";
 import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
 import FormCheckLabel from "react-bootstrap/esm/FormCheckLabel";
 
-function CleanStatus({ id_item, aksi, register }) {
+function CleanStatus({ id_item, aksi, nama, register }) {
     const [unmatch, setUnmatch] = useState(false);
-    // const [formData, setFormData] = useState({});
-
-    // const handleChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setFormData(prevData => ({
-    //         ...prevData,
-    //         [name]: value
-    //     }));
-    // };
 
     return (
         <div>
@@ -36,8 +27,13 @@ function CleanStatus({ id_item, aksi, register }) {
                         return (
                             <div key={id_item + "_" + index + "_" + aksi}>
                                 <FormCheck>
-                                    <FormCheckLabel htmlFor={id_item + "_" + index + "_" + aksi}>{aksi}</FormCheckLabel>
-                                    <FormCheckInput {...register(`${id_item}.1.${aksi}`)} id={id_item + "_" + index + "_" + aksi} name={id_item + "_" + index + "_" + aksi} />
+                                    <FormCheckLabel htmlFor={id_item + "_" + index + "_" + aksi}>
+                                        {aksi}
+                                    </FormCheckLabel>
+                                    <FormCheckInput
+                                        {...register(`${id_item}.1.${aksi}`)}
+                                        id={id_item + "_" + index + "_" + aksi}
+                                        value={true} />
                                 </FormCheck>
                             </div>
                         )

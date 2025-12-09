@@ -7,6 +7,9 @@ function User() {
     const navigate = useNavigate();
     const loader = useLoaderData();
     const loginData = JSON.parse(localStorage.getItem('loginData'));
+    if (loginData == null) {
+        location.href = "/";
+    }
     const nama = loginData.response.nama;
     const jabatan = loginData.response.jabatan;
     const shift = loginData.response.shift;

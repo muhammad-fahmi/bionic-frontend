@@ -6,19 +6,7 @@ import { useForm } from "react-hook-form";
 import { OrbitProgress } from "react-loading-indicators";
 import { Form, useNavigate } from "react-router";
 import CleanStatus from "../../../components/CleanStatus";
-
-function formatString(inputString) {
-    // Replace underscores with spaces
-    let spacedString = inputString.replaceAll('_', ' ');
-
-    // Capitalize the first letter
-    if (spacedString.length === 0) {
-        return ""; // Handle empty string case
-    }
-    let capitalizedString = spacedString.charAt(0).toUpperCase() + spacedString.substring(1);
-
-    return capitalizedString;
-}
+import { formatString } from "../../../utils/utility";
 
 export default function Pegawai(props) {
     const [isAvailable, setIsAvailable] = useState(0);
@@ -59,6 +47,7 @@ export default function Pegawai(props) {
 
     const onSubmit = async (data) => {
         const scanDataLocal = JSON.parse(localStorage.getItem('scanData'))[0];
+        console.log(data);
         await axios.post('/api/task/submit', {
             data: { ...props, ...{ lokasi: scanDataLocal['lokasi'], lokasi_id: scanDataLocal['lokasi_id'] }, data }
         });
