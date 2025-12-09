@@ -6,14 +6,6 @@ const Qr = lazy(() => import('../layout/pages/qrcode/Qr'));
 const User = lazy(() => import('../layout/pages/user/User'));
 const Base = lazy(() => import('../templates/Base'));
 
-function simulateSuccessfulRequest(data, delay = 1000) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(data); // Resolve the promise with the simulated data
-        }, delay);
-    });
-}
-
 function RootErrorBoundary() {
     let error = useRouteError();
     if (isRouteErrorResponse(error)) {
@@ -79,18 +71,10 @@ const router = createBrowserRouter([
             {
                 path: 'user',
                 lazy: async () => {
-                    const [Component, action] = await Promise.all([
-                        User,
-                        async ({ request }) => {
-                            const formData = await request.formData();
-                            const terima = formData.get("terima");
-                            const tolak = formData.get("tolak");
-
-                            await simulateSuccessfulRequest('success', 5000)
-                            return { terima, tolak };
-                        }
+                    const [Component] = await Promise.all([
+                        User
                     ]);
-                    return { Component, action }
+                    return { Component }
                 },
             },
             {
@@ -99,6 +83,6 @@ const router = createBrowserRouter([
             },
         ],
     },
-], {basename:'/bionic-frontend'});
+], { basename: '/bionic-frontend' });
 
 export default router
