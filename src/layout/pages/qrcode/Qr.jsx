@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { QRCodeSVG } from 'qrcode.react';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 function Qr() {
     const [data, setData] = useState([]);
@@ -13,20 +13,23 @@ function Qr() {
     }, []);
 
     return (
-        <div className='row'>
-            {data.map((item) => {
-                let data = JSON.stringify(item);
-                return (
-                    <div className='col d-flex flex-column align-items-center'>
-                        <QRCodeSVG value={data} size={150} level="L" className='row-6' />
-                        <div className='row-6'>
-                            <h5 className='text-center fw-bold'>{item.lokasi}</h5>
-                            <p className='text-center'>Link: "https://bionic-natura.cloud/bionic-frontend/"</p>
-                        </div>
-                    </div>
-                )
-            })}
+        <div className='container-fluid bg-transparent'>
+            <div className="row" style={{padding: '16px'}}>
+                {data.map((item) => {
+                    let data = JSON.stringify(item);
+                    return (
+                        <Fragment>
+                            <div className='col-3 text-center p-3 d-flex flex-column align-items-center border border-1'>
+                                <QRCodeSVG value={data} size={75} level="M" />
+                                <h6 className='fw-bold mb-1' style={{ fontSize: '16px', textTransform: 'uppercase' }}>{item.lokasi}</h6>
+                            </div>
+                        </Fragment>
+                    )
+                })}
+            </div>
+
         </div>
+
 
     );
 }
