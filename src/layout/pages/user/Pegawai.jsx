@@ -158,11 +158,12 @@ export default function Pegawai(props) {
                 <div className="p-3">
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         {data.map(item => {
+                            console.log(item);
                             return (
                                 <Card className="my-2" key={item.id}>
                                     <CardHeader children={<h6>{formatString(item.item)}</h6>} />
                                     <CardBody >
-                                        <CleanStatus id_item={item.id} nama={item.item} aksi={item.aksi} register={register} />
+                                        <CleanStatus id_item={item.id} nama={item.item} type={item.type} aksi={item.aksi} register={register} />
                                     </CardBody>
                                 </Card>
                             );
