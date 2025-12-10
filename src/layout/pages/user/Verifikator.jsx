@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Badge, Button, Modal } from "react-bootstrap";
+import { Badge, Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
 
 function Verifikator({ nama, jabatan }) {
     const [data, setData] = useState([]);
     const [button, setButton] = useState(false);
-    const [showModal, setShowModal] = useState(false);
+    // const [showModal, setShowModal] = useState(false);
 
     const navigate = useNavigate();
 
@@ -18,26 +18,25 @@ function Verifikator({ nama, jabatan }) {
             });
     }, [button]);
 
-    // const handleSubmit = (submitValue, id, tanggal, petugas) => {
-    //     axios.put('/api/submitted_task', {
-    //         data: submitValue,
-    //         id: id,
-    //         tanggal: tanggal,
-    //         petugas: petugas
-    //     })
-    //         .then(() => {
-    //             setButton(!button);
-    //         })
-    // };
+    const handleSubmit = (submitValue, id, petugas) => {
+        axios.put('/api/submitted_task', {
+            data: submitValue,
+            id: id,
+            petugas: petugas
+        })
+            .then(() => {
+                setButton(!button);
+            })
+    };
 
-    const handleModal = () => {
-        setShowModal(true);
-    }
+    // const handleModal = () => {
+    //     setShowModal(true);
+    // }
 
 
     return (
         <div>
-            <Modal
+            {/* <Modal
                 show={showModal}
                 onHide={() => setShowModal(false)}
                 size="lg"
@@ -55,16 +54,16 @@ function Verifikator({ nama, jabatan }) {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={() => { setShowModal(false) }}>Close</Button>
-                    {/* {(item.status == 'approved' || item.status == 'rejected') ? 'Detail (on progress)' : <div>
+                    {(item.status == 'approved' || item.status == 'rejected') ? 'Detail (on progress)' : <div>
                         <Button variant="success" onClick={() => {
                             handleSubmit('approved', item.id, item.tanggal, item.petugas);
                         }} className="mx-2"><i className="fa-solid fa-check"></i>Terima</Button>
                         <Button variant="danger" onClick={() => {
                             handleSubmit('rejected', item.id, item.tanggal, item.petugas);
                         }} className="mx-2"><i className="fa-solid fa-xmark"></i>Tolak</Button>
-                    </div>} */}
+                    </div>}
                 </Modal.Footer>
-            </Modal>
+            </Modal> */}
             <div className="card">
                 <div className="row p-3 align-items-center justify-content-center">
                     <div className="col-3">
@@ -135,12 +134,37 @@ function Verifikator({ nama, jabatan }) {
                                             {item.status == 'rejected' && <Badge pill bg="danger">{item.status}</Badge>}
                                         </td>
                                         <td>
-                                            <Button variant="secondary" className="d-flex align-items-center" onClick={() => {
+                                            {(item.status == 'approved' || item.status == 'rejected') ? <>
+                                                <span className="fw-bold">Detail (on progress)</span>
+                                            </> : <>
+                                                <Button
+                                                    variant="success"
+                                                    size="sm"
+                                                    className="mx-1"
+                                                    onClick={() => {
+                                                        handleSubmit('approved', item.id, item.petugas)
+                                                    }}>
+                                                    <i className="fa-solid fa-check"></i>
+                                                    Terima
+                                                </Button>
+                                                <Button
+                                                    variant="danger"
+                                                    size="sm"
+                                                    className="mx-1"
+                                                    onClick={() => {
+                                                        handleSubmit('rejected', item.id, item.petugas)
+                                                    }}>
+                                                    <i className="fa-solid fa-xmark"></i>
+                                                    Tolak
+                                                </Button>
+                                            </>}
+
+                                            {/* <Button variant="secondary" className="d-flex align-items-center" onClick={() => {
                                                 handleModal();
                                             }}>
                                                 <i className="fa-solid fa-magnifying-glass"></i>
                                                 <span className="mx-1">Detail</span>
-                                            </Button>
+                                            </Button> */}
                                         </td>
                                     </tr>
                                 );
