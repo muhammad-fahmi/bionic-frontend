@@ -3,22 +3,22 @@ import { FormCheck } from "react-bootstrap";
 import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
 import FormCheckLabel from "react-bootstrap/esm/FormCheckLabel";
 
-function CleanStatus({ id_item, aksi, nama, register }) {
+function CleanStatus({ id_item, aksi, type, register }) {
     const [unmatch, setUnmatch] = useState(false);
 
     return (
         <div>
             {/* Sesuai Standar */}
-            <FormCheck label={"Sesuai Standar"} id={id_item + " sesuai"} type="radio" style={{ fontSize: '18px' }} onClick={() => {
+            <FormCheck label={type == "refill" ? "Tersedia" : "Bersih"} id={id_item + " sesuai"} type="radio" style={{ fontSize: '18px' }} onClick={() => {
                 setUnmatch(false);
                 // handleChange(e);
-            }} {...register(`${id_item}.0`)} value={"sesuai"} />
+            }} {...register(`${id_item}.0`)} value={type == "refill" ? "tersedia" : "bersih"} />
 
             {/* Tidak Sesuai Standar */}
-            <FormCheck label={"Tidak Sesuai Standar"} id={id_item + " tidak_sesuai"} type="radio" style={{ fontSize: '18px' }} onClick={() => {
+            <FormCheck label={type == "refill" ? "Tidak Tersedia" : "Kotor"} id={id_item + " tidak_sesuai"} type="radio" style={{ fontSize: '18px' }} onClick={() => {
                 setUnmatch(true);
                 // handleChange(e);
-            }} {...register(`${id_item}.0`)} value={"tidak_sesuai"} />
+            }} {...register(`${id_item}.0`)} value={type == "refill" ? "tidak_tersedia" : "kotor"} />
 
             {/* Checkbox ketika tidak sesuai standar */}
             {unmatch ?
